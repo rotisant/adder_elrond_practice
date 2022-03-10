@@ -1,0 +1,15 @@
+[package]
+authors = ["you"]
+edition = "2018"
+name = "adder"
+publish = false
+version = "0.0.1"
+
+[lib]
+path = "src/adder.rs"
+
+[dependencies.elrond-wasm]
+version = "0.29.3"
+
+[dev-dependencies.elrond-wasm-debug]
+version = "0.29.3"

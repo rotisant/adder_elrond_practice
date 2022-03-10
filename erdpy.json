@@ -1,0 +1,20 @@
+{
+    "contract": {
+        "deploy": {
+            "proxy": "https://devnet-gateway.elrond.com",
+            "chain": "D",
+            "verbose": true,
+            "bytecode": "output/adder.wasm",
+            "recall-nonce": true,
+            "pem": "../wallets/devnet-roti-sant.pem",
+            "metadata-payable": true,
+            "metadata-payable-by-sc": true,
+            "gas-limit": "20000000",
+            "arguments": [
+                5
+            ],
+            "send": true,
+            "outfile": "deploy-testnet.interaction.json"
+        }
+    }
+}
