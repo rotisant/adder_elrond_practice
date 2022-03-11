@@ -38,15 +38,20 @@ pub trait Adder {
     //         .execute_on_dest_context();
     // }
 
-    #[payable("EGLD")]
+    // Below Function will transfer all the EGLD balance of contract to the Delegation Contract
+    // Make sure your contract has some existing funds
     #[endpoint]
-    fn temp_delegate(&self, value: BigUint) {
+    #[payable("*")]
+    fn temp_delegate(&self) {
         let sc_address = ManagedAddress::new_from_bytes(&hex!(
             "0000000000000000000100000000000000000000000000000000000006ffffff"
         ));
+        let my_address = self.blockchain().get_sc_address();
+        let contract_balance = self.blockchain().get_balance(&my_address);
         self.contract_proxy(sc_address)
             .delegate()
-            .with_egld_transfer(value)
+            .with_egld_transfer(contract_balance)
+            .with_gas_limit(12000000)
             .transfer_execute();
     }
 
@@ -73,16 +78,8 @@ mod callee_proxy {
 
     #[elrond_wasm::proxy]
     pub trait CalleeContract {
-        // #[payable("EGLD")]
-        // #[endpoint]
-        // fn delegate(&self, #[payment] payment: BigUint);
-
-        #[payable("EGLD")]
         #[endpoint]
+        #[payable("*")]
         fn delegate(&self);
-
-        // #[payable("EGLD")]
-        // #[endpoint(stake)]
-        // fn stake_endpoint(&self, #[payment] payment: BigUint);
     }
 }
