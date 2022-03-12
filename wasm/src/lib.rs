@@ -9,7 +9,11 @@ elrond_wasm_node::wasm_endpoints! {
     (
         add
         getSum
+        temp_claim_rewards
         temp_delegate
+        temp_re_delegate_rewards
+        temp_un_delegate
+        temp_withdraw
     )
 }
 

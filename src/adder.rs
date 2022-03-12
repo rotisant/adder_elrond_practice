@@ -12,8 +12,8 @@ pub trait Adder {
     fn sum(&self) -> SingleValueMapper<BigUint>;
 
     #[init]
-    fn init(&self, initial_value: BigUint) {
-        self.sum().set(initial_value);
+    fn init(&self) {
+        self.sum().set(BigUint::zero());
     }
 
     /// Add desired amount to the storage variable.
@@ -39,6 +39,50 @@ pub trait Adder {
             .transfer_execute();
     }
 
+    #[endpoint]
+    fn temp_claim_rewards(&self) {
+        let sc_address = ManagedAddress::new_from_bytes(&hex!(
+            "0000000000000000000100000000000000000000000000000000000006ffffff"
+        ));
+        self.contract_proxy(sc_address)
+            .claimRewards()
+            .with_gas_limit(12000000)
+            .transfer_execute();
+    }
+
+    #[endpoint]
+    fn temp_re_delegate_rewards(&self) {
+        let sc_address = ManagedAddress::new_from_bytes(&hex!(
+            "0000000000000000000100000000000000000000000000000000000006ffffff"
+        ));
+        self.contract_proxy(sc_address)
+            .reDelegateRewards()
+            .with_gas_limit(12000000)
+            .transfer_execute();
+    }
+
+    #[endpoint]
+    fn temp_un_delegate(&self, value: BigUint) {
+        let sc_address = ManagedAddress::new_from_bytes(&hex!(
+            "0000000000000000000100000000000000000000000000000000000006ffffff"
+        ));
+        self.contract_proxy(sc_address)
+            .unDelegate(value)
+            .with_gas_limit(12000000)
+            .transfer_execute();
+    }
+
+    #[endpoint]
+    fn temp_withdraw(&self) {
+        let sc_address = ManagedAddress::new_from_bytes(&hex!(
+            "0000000000000000000100000000000000000000000000000000000006ffffff"
+        ));
+        self.contract_proxy(sc_address)
+            .withdraw()
+            .with_gas_limit(12000000)
+            .transfer_execute();
+    }
+
     #[proxy]
     fn contract_proxy(&self, to: ManagedAddress) -> callee_proxy::Proxy<Self::Api>;
 }
@@ -51,5 +95,17 @@ mod callee_proxy {
         #[endpoint]
         #[payable("*")]
         fn delegate(&self);
+
+        #[endpoint]
+        fn claimRewards(&self);
+
+        #[endpoint]
+        fn reDelegateRewards(&self);
+
+        #[endpoint]
+        fn unDelegate(&self, value: BigUint);
+
+        #[endpoint]
+        fn withdraw(&self);
     }
 }
